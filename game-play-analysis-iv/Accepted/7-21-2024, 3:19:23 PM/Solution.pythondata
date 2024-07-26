@@ -1,0 +1,8 @@
+// https://leetcode.com/problems/game-play-analysis-iv
+
+import pandas as pd
+def gameplay_analysis(activity: pd.DataFrame) -> pd.DataFrame:
+    activity['first'] = activity.groupby('player_id')['event_date'].transform(min)
+    a2nd_day = activity[activity['first'] + pd.DateOffset(1) == activity['event_date']]
+    ans = round(len(a2nd_day) / activity.player_id.nunique(), 2)
+    return pd.DataFrame({'fraction' : [ans]})
