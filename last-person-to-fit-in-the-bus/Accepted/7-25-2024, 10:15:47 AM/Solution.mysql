@@ -1,0 +1,10 @@
+// https://leetcode.com/problems/last-person-to-fit-in-the-bus
+
+# Write your MySQL query statement below
+SELECT person_name FROM (
+SELECT person_name, SUM(Weight) OVER (ORDER BY turn) AS total_weight
+FROM Queue 
+) A
+WHERE total_weight <= 1000
+ORDER BY total_weight DESC 
+LIMIT 1
