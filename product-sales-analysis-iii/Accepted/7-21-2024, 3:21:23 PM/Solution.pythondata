@@ -1,0 +1,8 @@
+// https://leetcode.com/problems/product-sales-analysis-iii
+
+import pandas as pd
+
+def sales_analysis(sales: pd.DataFrame, product: pd.DataFrame) -> pd.DataFrame:
+    min_year = sales.groupby('product_id')['year'].min().reset_index()
+    result = sales.merge(min_year,how='inner',on=['product_id','year'])
+    return result.rename(columns={'year':'first_year'})[['product_id','first_year','quantity','price']]
