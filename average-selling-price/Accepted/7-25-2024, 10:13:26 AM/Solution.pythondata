@@ -1,0 +1,17 @@
+// https://leetcode.com/problems/average-selling-price
+
+import pandas as pd
+
+def average_selling_price(prices: pd.DataFrame, units_sold: pd.DataFrame) -> pd.DataFrame:
+    df = pd.merge(prices, units_sold, on='product_id', how='inner')
+    df = (df
+            .query('purchase_date>=start_date and purchase_date<=end_date')
+            .assign(revenue=df.price*df.units)
+            .groupby('product_id', as_index=False)
+            .apply(lambda x: (x.revenue.sum()/x.units.sum()).round(2))
+            .rename({None:'average_price'},axis=1))
+
+    for pid in set(prices.product_id.unique()) - set(df.product_id.unique()):
+        df.loc[len(df.index)] = [pid, 0]
+        
+    return(df)
