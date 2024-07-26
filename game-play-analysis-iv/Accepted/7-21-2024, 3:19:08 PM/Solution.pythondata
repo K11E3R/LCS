@@ -1,0 +1,32 @@
+// https://leetcode.com/problems/game-play-analysis-iv
+
+import pandas as pd
+
+def gameplay_analysis(activity: pd.DataFrame) -> pd.DataFrame:
+    agg_activity = (
+        activity
+        .assign(
+            first_day=lambda frame: (
+                frame
+                .groupby("player_id")
+                [["event_date"]]
+                .transform("min")
+            ),
+            is_day=lambda frame: (
+                (frame.event_date - frame.first_day)
+                .dt
+                .days
+            )
+        )
+        .query("is_day == 1")
+    )
+
+    return (
+        pd.DataFrame(
+            {
+                "fraction": [
+                    round(agg_activity.player_id.nunique() / activity.player_id.nunique(), 2)
+                ],
+            },
+        )
+    )
