@@ -1,0 +1,13 @@
+// https://leetcode.com/problems/biggest-single-number
+
+# Write your MySQL query statement below
+With cte AS(
+SELECT num
+FROM MyNumbers 
+GROUP BY num
+HAVING COUNT(num)=1
+)
+
+SELECT MAX(num) as num
+FROM cte 
+
