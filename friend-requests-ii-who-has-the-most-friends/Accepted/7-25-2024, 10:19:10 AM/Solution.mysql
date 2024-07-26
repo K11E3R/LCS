@@ -1,0 +1,22 @@
+// https://leetcode.com/problems/friend-requests-ii-who-has-the-most-friends
+
+# Write your MySQL query statement below
+
+(SELECT r.requester_id as id,IFNULL(count(requester_id),0) + IFNULL(acc.cnt,0) as num
+from (Select count(accepter_id)  as cnt, accepter_id as id
+from RequestAccepted r
+GROUP BY r.accepter_id
+) as acc RIGHT OUTER JOIN RequestAccepted r 
+ON acc.id=r.requester_id 
+GROUP BY r.requester_id
+)
+UNION (
+Select accepter_id as id,count(accepter_id) as num
+from RequestAccepted r
+where accepter_id NOT IN (
+    SELECT distinct requester_id from RequestAccepted
+)
+GROUP BY r.accepter_id
+)
+ORDER BY num desc
+limit 1
