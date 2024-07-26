@@ -1,0 +1,17 @@
+// https://leetcode.com/problems/immediate-food-delivery-ii
+
+# Write your MySQL query statement below
+
+WITH FirstOrders as (
+    SELECT
+        MIN(D.order_date) as first_order_date,
+        MIN(D.customer_pref_delivery_date) as first_pref_delivery_date
+    FROM
+        Delivery D
+    GROUP BY
+        D.customer_id
+)
+SELECT
+    ROUND(100.0 * SUM(F.first_order_date=F.first_pref_delivery_date) / COUNT(*), 2) as immediate_percentage
+FROM
+    FirstOrders F
